@@ -15,7 +15,7 @@ Language: Python
 Environment: python-dotenv for secure API key management
 
 📂 Project Structure
-app.py # The main Streamlit user interface
-api_call.py # Handles prompts and Gemini API connections
-.env # Stores the Gemini API key (DO NOT UPLOAD TO GITHUB)
-README.md # Project documentation
+1.app.py # The main Streamlit user interface
+2.api_call.py # Handles prompts and Gemini API connections
+3.(.env) # Stores the Gemini API key (DO NOT UPLOAD TO GITHUB)
+4.README.md # Project documentation
