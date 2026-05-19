@@ -8,76 +8,77 @@ my_api_key = os.getenv("GEMINI_API_KEY")
 
 client = genai.Client(api_key=my_api_key)
 
+
 def code_debugger(code, language):
-    prompt = f"""You are an expert Programming Debugger and a beginner-friendly teacher.
+    prompt = f"""You are an expert debugger and beginner-friendly teacher. Analyze the {language} code below.
 
-Your job is to carefully analyze the following {language} code.
+Rules:
+- Check if code compiles/runs correctly
+- Detect ALL errors: syntax, missing libraries, wrong usage, logical issues
+- Flag mixed-language concepts (e.g. C mixed with C++)
+- Explain everything simply — no complex jargon
 
-IMPORTANT RULES:
-- First, check if the code will compile or run correctly.
-- Detect ALL errors (syntax, missing libraries, wrong usage, logical issues).
-- Do NOT ignore any mistakes.
-- Be clear and simple in explanations (no complex jargon).
-- If the code mixes concepts incorrectly (like C and C++), point it out.
-
-Provide the output in this strict markdown format:
+Respond in this exact markdown format:
 
 ### 🐞 Detected Errors
-- (List each error clearly)
-- (Explain WHY it is wrong in simple words)
+- Each error with a simple explanation of why it's wrong
 
 ### 🛠️ Fixed Code
-(Provide the FULL corrected {language} code in a proper code block)
+````{language}
+(full corrected code)
+````
 
 ### 💡 Explanation
-(Explain what you changed and why, step by step in simple terms)
+Step-by-step: what was changed and why
 
-### ✅ Final Output (if applicable)
-(What the program will output after fixing, if it can run)
+### ✅ Final Output
+What the program outputs after fixing (if runnable)
 
-Here is the {language} code:
+{language} code:
+````{language}
 {code}
-"""
+```"""
 
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=prompt
     )
     return response.text
+
 
 
 def code_reviewer(code, language):
-    
-    prompt = f"""You are a friendly but smart Programming Teacher.
+    prompt = f"""You are a friendly but smart Programming Teacher. Review the {language} code below.
 
-Carefully review the following {language} code.
+Rules:
+- Check if code has errors or won't compile
+- Point out ALL mistakes (missing headers, wrong syntax, logic issues) and explain WHY simply
+- Never ignore serious mistakes
 
-IMPORTANT:
-- First, check if the code has any errors or will not compile.
-- Clearly point out ALL mistakes (missing headers, wrong syntax, etc.)
-- Then explain them in a simple way (no complex jargon).
-- Do NOT ignore serious mistakes.
-
-Provide the output in this strict markdown format:
+Respond in this exact markdown format:
 
 ### 🌟 Encouragement & Score
-(Give a score out of 10, but reduce score if there are errors. Still be encouraging.)
+Score /10 (reduce for errors, stay encouraging)
 
 ### ❌ Mistakes Found
-(List all errors clearly and simply. Explain WHY they are wrong.)
+- List each error with a simple explanation of why it's wrong
 
 ### 🚀 Easy Ways to Improve
-(Give 2-3 simple improvements for readability or logic.)
+2–3 simple improvements for readability or logic
 
 ### ✨ Polished Code
-(Fix the code properly and provide correct {language} code.)
+``````{language}
+(fully corrected code)
+``````
 
-Here is the {language} code:
+{language} code:
+``````{language}
 {code}
-"""
+`````"""
 
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=prompt
     )
     return response.text
+
